@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bsq.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybouhaik <ybouhaik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: maxgarci <maxgarci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 13:28:41 by maxgarci          #+#    #+#             */
-/*   Updated: 2023/07/24 18:05:15 by ybouhaik         ###   ########.fr       */
+/*   Updated: 2023/07/24 18:49:59 by maxgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,11 @@ char	**fill_matrix(char **matrix, char *buffer)
 			++column_pos;
 	}
 	return (matrix);
+}
+
+void	write_x_matrix(char **matrix, int weigth, s_pos pos)
+{
+	
 }
 
 // char	**put_weight_in_matrix(char **matrix, struct s_pos *obstacles_dictionary, int row_count, int column_count)
