@@ -6,7 +6,7 @@
 /*   By: ybouhaik <ybouhaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 13:28:41 by maxgarci          #+#    #+#             */
-/*   Updated: 2023/07/24 17:46:22 by ybouhaik         ###   ########.fr       */
+/*   Updated: 2023/07/24 18:05:15 by ybouhaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,5 @@ int	main(int argc, char *argv[])
 		return (1);
 	if (algorithm(row_count, column_count, buffer))
 		return (1);
-	algorithm(row_count, column_count, buffer);
 	return (0);
 }
