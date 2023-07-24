@@ -6,7 +6,7 @@
 /*   By: ybouhaik <ybouhaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 13:28:41 by maxgarci          #+#    #+#             */
-/*   Updated: 2023/07/24 19:52:30 by ybouhaik         ###   ########.fr       */
+/*   Updated: 2023/07/24 20:08:43 by ybouhaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,16 +163,23 @@ int	main(int argc, char *argv[])
 {
 	int		row_count;
 	int		column_count;
+	int		cont;
 	char	*buffer;
 
 	row_count = -1;
 	column_count = 0;
+	cont = 1;
 	buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE);
 	if (!argc)
 		return (1);
-	if (read_file(argv[1], &row_count, &column_count, &buffer) == (-1))
-		return (1);
-	if (algorithm(row_count, column_count, buffer))
-		return (1);
+	while (cont < argc)
+	{
+		if (read_file(argv[cont], &row_count, &column_count, &buffer) == (-1))
+			return (1);
+		if (algorithm(row_count, column_count, buffer))
+			return (1);
+		write(1, "\n", 1);
+		cont++;
+	}
 	return (0);
 }
