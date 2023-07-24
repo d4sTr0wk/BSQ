@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bsq.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maxgarci <maxgarci@student.42malaga.com>   +#+  +:+       +#+        */
+/*   By: ybouhaik <ybouhaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 13:28:41 by maxgarci          #+#    #+#             */
-/*   Updated: 2023/07/24 15:06:37 by maxgarci         ###   ########.fr       */
+/*   Updated: 2023/07/24 16:00:58 by ybouhaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,33 @@ int	read_file(char *file_name, int *row_count, int *column_count, char **buffer)
 	return (0);
 }
 
+char **fill_matrix(char **matrix, char *buffer)
+{
+	int row_count;
+	int column_count;
+	int pos_buffer;
+	
+	pos_buffer = 5;
+	row_count = 0;
+	column_count = 0;
+	while (*(buffer + pos_buffer) != '\0')
+	{
+		if (*(buffer + pos_buffer) == 'o')
+			matrix[row_count][column_count] = 'o';
+		if (*(buffer + pos_buffer) == '.')
+			matrix[row_count][column_count] = '.';
+		if (*(buffer + pos_buffer) == '\n')
+		{
+			++row_count;
+			column_count = 0;
+		}
+		else
+			++column_count;
+		pos_buffer++;
+	}
+	return (matrix);
+}
+
 int	main(int argc, char *argv[])
 {
 	int		row_count;
@@ -77,9 +104,22 @@ int	main(int argc, char *argv[])
 		if (!(matrix[i]))
 			return (1);
 	}
-	printf("%s", buffer);
-	//printf("%d %d", row_count, column_count);
-	//fill_matrix();	
+	printf("%s\n\n", buffer);
+	matrix = fill_matrix(matrix, buffer);	
+	printf ("Matriz copiada:\n");
+	i = 0;
+	// int j;
+	// while (i < row_count)
+	// {
+	// 	j = 0;
+	// 	while (j < column_count)
+	// 	{
+	// 		printf ("%c", matrix[i][j]);
+	// 		j++;
+	// 	}
+	// 	printf ("\n");
+	// 	i++;
+	// }
 	while (i >= 0)
 		free(matrix[--i]);
 	free(matrix);
