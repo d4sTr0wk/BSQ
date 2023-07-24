@@ -1,0 +1,17 @@
+	// printf ("Matriz copiada:\n");
+	// i = 0;
+	// int j;
+	// while (i < row_count)
+	// {
+	// 	j = 0;
+	// 	while (j < column_count)
+	// 	{
+	// 		printf ("%c", matrix[i][j]);
+	// 		j++;
+	// 	}
+	// 	printf ("\n");
+	// 	i++;
+	// }
+	// while (i >= 0)
+	// 	free(matrix[--i]);
+	// free(matrix);

@@ -6,7 +6,7 @@
 /*   By: ybouhaik <ybouhaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 13:28:41 by maxgarci          #+#    #+#             */
-/*   Updated: 2023/07/24 16:54:34 by ybouhaik         ###   ########.fr       */
+/*   Updated: 2023/07/24 17:46:22 by ybouhaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,12 @@
 #include <unistd.h>
 
 #define BUFFER_SIZE 2048
+
+struct	s_pos
+{
+	int	row_pos;
+	int	column_pos;
+};
 
 int	read_file(char *file_name, int *row_count, int *column_count, char **buffer)
 {
@@ -71,34 +77,49 @@ char	**fill_matrix(char **matrix, char *buffer)
 	return (matrix);
 }
 
-// char **put_weight_in_matrix(char **matrix, int row_count, int column_count)
+// char	**put_weight_in_matrix(char **matrix, struct s_pos *obstacles_dictionary, int row_count, int column_count)
 // {
-// 	int		row_pos;
-// 	int		column_pos;
-
-// 	row_count = -1;
-// 	column_count = -1;
-
-// 	while ()
+// 	int	row_pos;
+// 	int	column_pos;
+	
+// 	row_pos = -1;
+// 	column_pos = -1;
 // 	return (matrix);
 // }
 
-int	main(int argc, char *argv[])
+struct s_pos *put_obstacles(char **matrix, struct s_pos *obstacles_dictionary, int row_count, int column_count)
 {
-	int		row_count;
-	int		column_count;
-	char	**matrix;
-	int		i;
-	char	*buffer;
+	int	row_pos;
+	int	column_pos;
+	int	it;
+	
+	column_pos = -1;
+	it = 0;
+	while (++column_pos < column_count)
+	{
+		row_pos = -1;
+		while (++row_pos < row_count)
+		{
+			if (matrix[row_pos][column_pos] == 'o')
+			{
+				obstacles_dictionary[it].column_pos = column_pos;
+				obstacles_dictionary[it].row_pos = row_pos;
+				it++;
+			}
+		}
+	}
+	obstacles_dictionary[it].column_pos = -1;
+	obstacles_dictionary[it].row_pos = -1;
+	return (obstacles_dictionary);
+}
 
-	row_count = -1;
-	column_count = 0;
-	buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE);
+int	algorithm(int row_count, int column_count, char *buffer)
+{
+	char			**matrix;
+	int				i;
+	struct s_pos	*obstacles_dictionary;
+
 	i = -1;
-	if (!argc)
-		return (1);
-	if (read_file(argv[1], &row_count, &column_count, &buffer) == (-1))
-		return (1);
 	matrix = (char **)malloc(sizeof(char *) * row_count);
 	if (!matrix)
 		return (1);
@@ -109,22 +130,47 @@ int	main(int argc, char *argv[])
 			return (1);
 	}
 	matrix = fill_matrix(matrix, buffer);
-	// printf ("Matriz copiada:\n");
-	// i = 0;
-	// int j;
-	// while (i < row_count)
-	// {
-	// 	j = 0;
-	// 	while (j < column_count)
-	// 	{
-	// 		printf ("%c", matrix[i][j]);
-	// 		j++;
-	// 	}
-	// 	printf ("\n");
-	// 	i++;
-	// }
-	// while (i >= 0)
-	// 	free(matrix[--i]);
-	// free(matrix);
+	obstacles_dictionary = (struct s_pos *)malloc(sizeof(struct s_pos) * row_count * column_count);
+	if (!obstacles_dictionary)
+		return (1);
+	obstacles_dictionary = put_obstacles(matrix, obstacles_dictionary, row_count, column_count);
+	int j = 0;
+	while (obstacles_dictionary[j].column_pos != -1)
+	{
+		printf("\n%d %d\n", obstacles_dictionary[j].row_pos, obstacles_dictionary[j].column_pos);
+		j++;
+	}
+	i = 0;
+	while (i < row_count)
+	{
+		j = 0;
+		while (j < column_count)
+		{
+			printf ("%c", matrix[i][j]);
+			j++;
+		}
+		printf ("\n");
+		i++;
+	}
+	//matrix = put_weight_in_matrix(matrix, obstacles_dictionary, row_count, column_count);
+	return (0);
+}
+
+int	main(int argc, char *argv[])
+{
+	int		row_count;
+	int		column_count;
+	char	*buffer;
+
+	row_count = -1;
+	column_count = 0;
+	buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE);
+	if (!argc)
+		return (1);
+	if (read_file(argv[1], &row_count, &column_count, &buffer) == (-1))
+		return (1);
+	if (algorithm(row_count, column_count, buffer))
+		return (1);
+	algorithm(row_count, column_count, buffer);
 	return (0);
 }
