@@ -6,7 +6,7 @@
 /*   By: maxgarci <maxgarci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 13:28:41 by maxgarci          #+#    #+#             */
-/*   Updated: 2023/07/25 00:05:01 by maxgarci         ###   ########.fr       */
+/*   Updated: 2023/07/25 00:26:08 by maxgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define BUFFER_SIZE 2048
+#define BUFFER_SIZE 2147483647
 
 struct			s_pos
 {
@@ -168,9 +168,9 @@ void	calc_weight(char **m, struct s_pos *obs_dic, int rc, int cc, struct s_pos r
 					it = column_pos + 1;
 					while (candidate_weight >= (it - column_pos + 1) && it < cc)
 					{
+						obs_pos = find_c_obs(it, row_pos, obs_dic);
 						if ((obs_pos.row_pos != -1) && ((obs_pos.row_pos - row_pos) < candidate_weight))
 							candidate_weight = obs_pos.row_pos - row_pos;
-						obs_pos = find_c_obs(it, row_pos, obs_dic);
 						it++;
 					}
 					if (candidate_weight > greater_weight && (it - column_pos) == candidate_weight && (((obs_pos.row_pos - row_pos) >= candidate_weight) || (obs_pos.row_pos == -1)))
@@ -193,7 +193,8 @@ void	calc_weight(char **m, struct s_pos *obs_dic, int rc, int cc, struct s_pos r
 			}
 		}
 	}
-	printf("weight: %d, row: %d, column: %d", greater_weight, res_p.row_pos, res_p.column_pos);
+	//printf("weight: %d, row: %d, column: %d", greater_weight, res_p.row_pos, res_p.column_pos);
+	printf("rc: %d, cc: %d\n", rc, cc);
 	print_matrix(write_x_in_matrix(m, greater_weight, res_p), rc, cc);	
 }
 
@@ -259,6 +260,8 @@ int	main(int argc, char *argv[])
 	char	*buffer;
 
 	cont = 1;
+	// argc = 2;
+	// argv[1] = "example5_file";
 	buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE);
 	if (!argc)
 		return (1);
