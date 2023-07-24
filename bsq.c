@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bsq.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maxgarci <maxgarci@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybouhaik <ybouhaik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 13:28:41 by maxgarci          #+#    #+#             */
-/*   Updated: 2023/07/24 18:49:59 by maxgarci         ###   ########.fr       */
+/*   Updated: 2023/07/24 19:52:30 by ybouhaik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@
 
 #define BUFFER_SIZE 2048
 
-struct	s_pos
+struct			s_pos
 {
-	int	row_pos;
-	int	column_pos;
+	int			row_pos;
+	int			column_pos;
 };
 
 int	read_file(char *file_name, int *row_count, int *column_count, char **buffer)
@@ -77,87 +77,85 @@ char	**fill_matrix(char **matrix, char *buffer)
 	return (matrix);
 }
 
-void	write_x_matrix(char **matrix, int weigth, s_pos pos)
+char	**write_x_in_matrix(char **matrix, int weigth, struct s_pos pos)
 {
-	
+	int	row_pos;
+	int	column_pos;
+
+	column_pos = pos.column_pos;
+	while (column_pos < pos.column_pos + weigth)
+	{
+		row_pos = pos.row_pos;
+		while (row_pos < pos.row_pos + weigth)
+		{
+			matrix[row_pos][column_pos] = 'x';
+			row_pos++;
+		}
+		column_pos++;
+	}
+	return (matrix);
 }
 
-// char	**put_weight_in_matrix(char **matrix, struct s_pos *obstacles_dictionary, int row_count, int column_count)
+// char	**put_weight_in_matrix(char **matrix, struct s_pos *obs_dic,
+//		int row_count, int column_count)
 // {
 // 	int	row_pos;
 // 	int	column_pos;
-	
+
 // 	row_pos = -1;
 // 	column_pos = -1;
 // 	return (matrix);
 // }
 
-struct s_pos *put_obstacles(char **matrix, struct s_pos *obstacles_dictionary, int row_count, int column_count)
+struct s_pos	*put_obstacles(char **matrix, struct s_pos *obs_dic, int rcnt,
+		int ccnt)
 {
 	int	row_pos;
 	int	column_pos;
 	int	it;
-	
+
 	column_pos = -1;
 	it = 0;
-	while (++column_pos < column_count)
+	while (++column_pos < ccnt)
 	{
 		row_pos = -1;
-		while (++row_pos < row_count)
+		while (++row_pos < rcnt)
 		{
 			if (matrix[row_pos][column_pos] == 'o')
 			{
-				obstacles_dictionary[it].column_pos = column_pos;
-				obstacles_dictionary[it].row_pos = row_pos;
+				obs_dic[it].column_pos = column_pos;
+				obs_dic[it].row_pos = row_pos;
 				it++;
 			}
 		}
 	}
-	obstacles_dictionary[it].column_pos = -1;
-	obstacles_dictionary[it].row_pos = -1;
-	return (obstacles_dictionary);
+	obs_dic[it].column_pos = -1;
+	obs_dic[it].row_pos = -1;
+	return (obs_dic);
 }
 
-int	algorithm(int row_count, int column_count, char *buffer)
+int	algorithm(int rcnt, int ccnt, char *buffer)
 {
 	char			**matrix;
 	int				i;
-	struct s_pos	*obstacles_dictionary;
+	struct s_pos	*obs_dic;
 
 	i = -1;
-	matrix = (char **)malloc(sizeof(char *) * row_count);
+	matrix = (char **)malloc(sizeof(char *) * rcnt);
 	if (!matrix)
 		return (1);
-	while (++i < column_count)
+	while (++i < ccnt)
 	{
-		matrix[i] = (char *)malloc(sizeof(char) * column_count);
+		matrix[i] = (char *)malloc(sizeof(char) * ccnt);
 		if (!(matrix[i]))
 			return (1);
 	}
 	matrix = fill_matrix(matrix, buffer);
-	obstacles_dictionary = (struct s_pos *)malloc(sizeof(struct s_pos) * row_count * column_count);
-	if (!obstacles_dictionary)
+	obs_dic = (struct s_pos *)malloc(sizeof(struct s_pos) * rcnt * ccnt);
+	if (!obs_dic)
 		return (1);
-	obstacles_dictionary = put_obstacles(matrix, obstacles_dictionary, row_count, column_count);
-	int j = 0;
-	while (obstacles_dictionary[j].column_pos != -1)
-	{
-		printf("\n%d %d\n", obstacles_dictionary[j].row_pos, obstacles_dictionary[j].column_pos);
-		j++;
-	}
-	i = 0;
-	while (i < row_count)
-	{
-		j = 0;
-		while (j < column_count)
-		{
-			printf ("%c", matrix[i][j]);
-			j++;
-		}
-		printf ("\n");
-		i++;
-	}
-	//matrix = put_weight_in_matrix(matrix, obstacles_dictionary, row_count, column_count);
+	obs_dic = put_obstacles(matrix, obs_dic, rcnt, ccnt);
+	matrix = put_weight_in_matrix(matrix, obs_dic, rcnt, ccnt);
 	return (0);
 }
 
