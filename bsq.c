@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bsq.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybouhaik <ybouhaik@student.42.fr>          +#+  +:+       +#+        */
+/*   By: maxgarci <maxgarci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 13:28:41 by maxgarci          #+#    #+#             */
-/*   Updated: 2023/07/24 20:08:43 by ybouhaik         ###   ########.fr       */
+/*   Updated: 2023/07/25 00:05:01 by maxgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,26 @@ struct			s_pos
 	int			row_pos;
 	int			column_pos;
 };
+
+void	print_matrix(char **matrix, int row_count, int column_count)
+{
+	int i;
+	
+	printf ("Matriz copiada:\n");
+	i = 0;
+	int j;
+	while (i < row_count)
+	{
+		j = 0;
+		while (j < column_count)
+		{
+			printf ("%c", matrix[i][j]);
+			j++;
+		}
+		printf ("\n");
+		i++;
+	}
+}
 
 int	read_file(char *file_name, int *row_count, int *column_count, char **buffer)
 {
@@ -51,7 +71,7 @@ int	read_file(char *file_name, int *row_count, int *column_count, char **buffer)
 	return (0);
 }
 
-char	**fill_matrix(char **matrix, char *buffer)
+char	**fill_matrix(char **matrix, char *buffer, int rcnt)
 {
 	int	row_pos;
 	int	column_pos;
@@ -62,7 +82,7 @@ char	**fill_matrix(char **matrix, char *buffer)
 	column_pos = 0;
 	while (*(buffer + (pos_buffer++)) != '\n')
 		;
-	while (*(buffer + pos_buffer) != '\0')
+	while (*(buffer + pos_buffer) != '\0' && row_pos != rcnt)
 	{
 		if ((*(buffer + pos_buffer) == 'o') || (*(buffer + pos_buffer) == '.'))
 			matrix[row_pos][column_pos] = *(buffer + pos_buffer);
@@ -96,19 +116,88 @@ char	**write_x_in_matrix(char **matrix, int weigth, struct s_pos pos)
 	return (matrix);
 }
 
-// char	**put_weight_in_matrix(char **matrix, struct s_pos *obs_dic,
-//		int row_count, int column_count)
-// {
-// 	int	row_pos;
-// 	int	column_pos;
+struct s_pos find_c_obs(int column_pos, int row_pos, struct s_pos *obs_dic)
+{
+	int	it;
+	int found;
+	struct s_pos obs_pos;
 
-// 	row_pos = -1;
-// 	column_pos = -1;
-// 	return (matrix);
-// }
+	it = -1;
+	found = 0;
+	obs_pos.column_pos = -1;
+	obs_pos.row_pos = -1;
+	while (!found && obs_dic[++it].column_pos != -1)
+	{
+		if (obs_dic[it].column_pos == column_pos && obs_dic[it].row_pos >= row_pos)
+		{
+			found = 1;
+			obs_pos.column_pos = obs_dic[it].column_pos;
+			obs_pos.row_pos = obs_dic[it].row_pos;
+		}
+	}
+	return (obs_pos);
+}
 
-struct s_pos	*put_obstacles(char **matrix, struct s_pos *obs_dic, int rcnt,
-		int ccnt)
+void	calc_weight(char **m, struct s_pos *obs_dic, int rc, int cc, struct s_pos res_p)
+{
+	int	row_pos;
+	int	column_pos;
+	int	greater_weight;
+	int	candidate_weight;
+	struct s_pos obs_pos;
+	
+	greater_weight = 0;
+	row_pos = -1;
+	column_pos = -1;
+	while (++column_pos < cc)
+	{
+		row_pos = -1;
+		while (++row_pos < rc)
+		{
+			if (m[row_pos][column_pos] != 'o')
+			{
+				obs_pos = find_c_obs(column_pos, row_pos, obs_dic);
+				if (obs_pos.column_pos == -1)
+					candidate_weight = rc - row_pos;
+				else
+					candidate_weight = obs_pos.row_pos - row_pos;
+				if (greater_weight < candidate_weight)
+				{
+					int it;
+					
+					it = column_pos + 1;
+					while (candidate_weight >= (it - column_pos + 1) && it < cc)
+					{
+						if ((obs_pos.row_pos != -1) && ((obs_pos.row_pos - row_pos) < candidate_weight))
+							candidate_weight = obs_pos.row_pos - row_pos;
+						obs_pos = find_c_obs(it, row_pos, obs_dic);
+						it++;
+					}
+					if (candidate_weight > greater_weight && (it - column_pos) == candidate_weight && (((obs_pos.row_pos - row_pos) >= candidate_weight) || (obs_pos.row_pos == -1)))
+					{
+						greater_weight = candidate_weight;
+						res_p.column_pos = column_pos;
+						res_p.row_pos = row_pos;
+					}
+					else
+					{
+						candidate_weight = obs_pos.column_pos - column_pos;
+						if (greater_weight < candidate_weight)
+						{
+							greater_weight = candidate_weight;
+							res_p.column_pos = column_pos;
+							res_p.row_pos = row_pos;
+						}
+					}
+				}
+			}
+		}
+	}
+	printf("weight: %d, row: %d, column: %d", greater_weight, res_p.row_pos, res_p.column_pos);
+	print_matrix(write_x_in_matrix(m, greater_weight, res_p), rc, cc);	
+}
+
+struct s_pos	*put_obstacles(char **matrix, struct s_pos *obs_dic, int rcnt, int ccnt)
 {
 	int	row_pos;
 	int	column_pos;
@@ -139,8 +228,11 @@ int	algorithm(int rcnt, int ccnt, char *buffer)
 	char			**matrix;
 	int				i;
 	struct s_pos	*obs_dic;
+	struct s_pos	res_p;
 
 	i = -1;
+	res_p.column_pos = -1;
+	res_p.row_pos = -1;
 	matrix = (char **)malloc(sizeof(char *) * rcnt);
 	if (!matrix)
 		return (1);
@@ -150,12 +242,12 @@ int	algorithm(int rcnt, int ccnt, char *buffer)
 		if (!(matrix[i]))
 			return (1);
 	}
-	matrix = fill_matrix(matrix, buffer);
+	matrix = fill_matrix(matrix, buffer, rcnt);
 	obs_dic = (struct s_pos *)malloc(sizeof(struct s_pos) * rcnt * ccnt);
 	if (!obs_dic)
 		return (1);
 	obs_dic = put_obstacles(matrix, obs_dic, rcnt, ccnt);
-	matrix = put_weight_in_matrix(matrix, obs_dic, rcnt, ccnt);
+	calc_weight(matrix, obs_dic, rcnt, ccnt, res_p);
 	return (0);
 }
 
@@ -166,14 +258,14 @@ int	main(int argc, char *argv[])
 	int		cont;
 	char	*buffer;
 
-	row_count = -1;
-	column_count = 0;
 	cont = 1;
 	buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE);
 	if (!argc)
 		return (1);
 	while (cont < argc)
-	{
+	{	
+		row_count = -1;
+		column_count = 0;
 		if (read_file(argv[cont], &row_count, &column_count, &buffer) == (-1))
 			return (1);
 		if (algorithm(row_count, column_count, buffer))

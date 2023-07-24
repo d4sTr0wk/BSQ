@@ -1,0 +1,56 @@
+void	calc_weight(char **m, struct s_pos *obs_dic, int rc, int cc, struct s_pos res_p)
+{
+	int	row_pos;
+	int	column_pos;
+	int	greater_weight;
+	int	candidate_weight;
+	struct s_pos obs_pos;
+	
+	greater_weight = 0;
+	row_pos = -1;
+	column_pos = -1;
+	while (++column_pos < cc)
+	{
+		row_pos = -1;
+		while (++row_pos < rc)
+		{
+			if (m[row_pos][column_pos] != 'o')
+			{
+				obs_pos = find_c_obs(column_pos, row_pos, obs_dic);
+				if (obs_pos.column_pos == -1)
+					candidate_weight = rc - row_pos;
+				else
+					candidate_weight = obs_pos.row_pos - row_pos;
+				if (greater_weight < candidate_weight)
+				{
+					int it;
+					
+					it = column_pos;
+					obs_pos = find_c_obs(it, row_pos, obs_dic);
+					while (((obs_pos.row_pos == -1) || ((obs_pos.row_pos - row_pos) > candidate_weight)) && candidate_weight > (++it - column_pos))
+					{
+						obs_pos = find_c_obs(it, row_pos, obs_dic);
+					}
+					if ((it) == candidate_weight && ((obs_pos.row_pos > candidate_weight) || (obs_pos.row_pos == -1)))
+					{
+						greater_weight = candidate_weight;
+						res_p.column_pos = column_pos;
+						res_p.row_pos = row_pos;
+					}
+					else
+					{
+						candidate_weight = obs_pos.column_pos - column_pos;
+						if (greater_weight < candidate_weight)
+						{
+							greater_weight = candidate_weight;
+							res_p.column_pos = column_pos;
+							res_p.row_pos = row_pos;
+						}
+					}
+				}
+			}
+		}
+	}
+	printf("weight: %d, row: %d, column: %d", greater_weight, res_p.row_pos, res_p.column_pos);
+	//write_x_matrix(m, weight, res_p);
+}
