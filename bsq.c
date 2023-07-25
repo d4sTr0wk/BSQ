@@ -6,7 +6,7 @@
 /*   By: maxgarci <maxgarci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 13:28:41 by maxgarci          #+#    #+#             */
-/*   Updated: 2023/07/25 12:37:06 by maxgarci         ###   ########.fr       */
+/*   Updated: 2023/07/25 13:40:21 by maxgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,12 +235,12 @@ int	algorithm(int rcnt, int ccnt, char *buffer)
 	res_p.column_pos = -1;
 	res_p.row_pos = -1;
 	matrix = (char **)malloc(sizeof(char *) * rcnt);
-	if (!matrix)
+	if (matrix == NULL)
 		return (1);
-	while (++i < ccnt)
+	while (++i < rcnt)
 	{
 		matrix[i] = (char *)malloc(sizeof(char) * ccnt);
-		if (!(matrix[i]))
+		if (matrix[i] == NULL)
 			return (1);
 	}
 	matrix = fill_matrix(matrix, buffer, rcnt);
@@ -249,6 +249,11 @@ int	algorithm(int rcnt, int ccnt, char *buffer)
 		return (1);
 	obs_dic = put_obstacles(matrix, obs_dic, rcnt, ccnt);
 	calc_weight(matrix, obs_dic, rcnt, ccnt, res_p);
+	for(int i = 0; i < rcnt; ++i){
+    	free(matrix[i]);
+	}
+	free(matrix);
+	free(obs_dic);
 	return (0);
 }
 
@@ -263,6 +268,8 @@ int	main(int argc, char *argv[])
 	// argc = 2;
 	// argv[1] = "example5_file";
 	buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE);
+	if (buffer == NULL)
+		return (1);
 	if (!argc)
 		return (1);
 	while (cont < argc)
@@ -276,5 +283,6 @@ int	main(int argc, char *argv[])
 		write(1, "\n", 1);
 		cont++;
 	}
+	free(buffer);
 	return (0);
 }
