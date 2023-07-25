@@ -6,7 +6,7 @@
 /*   By: maxgarci <maxgarci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 13:28:41 by maxgarci          #+#    #+#             */
-/*   Updated: 2023/07/25 08:51:05 by maxgarci         ###   ########.fr       */
+/*   Updated: 2023/07/25 12:37:06 by maxgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ void	print_matrix(char **matrix, int row_count, int column_count)
 		j = 0;
 		while (j < column_count)
 		{
-			printf ("%c", matrix[i][j]);
+			write(1, &(matrix[i][j]), 1);
 			j++;
 		}
-		printf ("\n");
+		write(1, "\n", 1);
 		i++;
 	}
 }
