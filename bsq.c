@@ -6,7 +6,7 @@
 /*   By: maxgarci <maxgarci@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 13:28:41 by maxgarci          #+#    #+#             */
-/*   Updated: 2023/07/25 00:26:08 by maxgarci         ###   ########.fr       */
+/*   Updated: 2023/07/25 08:51:05 by maxgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,9 +126,9 @@ struct s_pos find_c_obs(int column_pos, int row_pos, struct s_pos *obs_dic)
 	found = 0;
 	obs_pos.column_pos = -1;
 	obs_pos.row_pos = -1;
-	while (!found && obs_dic[++it].column_pos != -1)
+	while (!found && obs_dic[++it].row_pos != -1)
 	{
-		if (obs_dic[it].column_pos == column_pos && obs_dic[it].row_pos >= row_pos)
+		if (obs_dic[it].column_pos >= column_pos && obs_dic[it].row_pos == row_pos)
 		{
 			found = 1;
 			obs_pos.column_pos = obs_dic[it].column_pos;
@@ -149,31 +149,31 @@ void	calc_weight(char **m, struct s_pos *obs_dic, int rc, int cc, struct s_pos r
 	greater_weight = 0;
 	row_pos = -1;
 	column_pos = -1;
-	while (++column_pos < cc)
+	while (++row_pos < rc)
 	{
-		row_pos = -1;
-		while (++row_pos < rc)
+		column_pos = -1;
+		while (++column_pos < cc)
 		{
 			if (m[row_pos][column_pos] != 'o')
 			{
 				obs_pos = find_c_obs(column_pos, row_pos, obs_dic);
-				if (obs_pos.column_pos == -1)
-					candidate_weight = rc - row_pos;
+				if (obs_pos.row_pos == -1)
+					candidate_weight = cc - column_pos;
 				else
-					candidate_weight = obs_pos.row_pos - row_pos;
+					candidate_weight = obs_pos.column_pos - column_pos;
 				if (greater_weight < candidate_weight)
 				{
 					int it;
 					
-					it = column_pos + 1;
-					while (candidate_weight >= (it - column_pos + 1) && it < cc)
+					it = row_pos + 1;
+					while (candidate_weight >= (it - row_pos + 1) && it < rc)
 					{
-						obs_pos = find_c_obs(it, row_pos, obs_dic);
-						if ((obs_pos.row_pos != -1) && ((obs_pos.row_pos - row_pos) < candidate_weight))
-							candidate_weight = obs_pos.row_pos - row_pos;
+						obs_pos = find_c_obs(column_pos, it, obs_dic);
+						if ((obs_pos.column_pos != -1) && ((obs_pos.column_pos - column_pos) < candidate_weight))
+							candidate_weight = obs_pos.column_pos - column_pos;
 						it++;
 					}
-					if (candidate_weight > greater_weight && (it - column_pos) == candidate_weight && (((obs_pos.row_pos - row_pos) >= candidate_weight) || (obs_pos.row_pos == -1)))
+					if (candidate_weight > greater_weight && (it - row_pos) == candidate_weight && (((obs_pos.column_pos - column_pos) >= candidate_weight) || (obs_pos.column_pos == -1)))
 					{
 						greater_weight = candidate_weight;
 						res_p.column_pos = column_pos;
@@ -181,7 +181,7 @@ void	calc_weight(char **m, struct s_pos *obs_dic, int rc, int cc, struct s_pos r
 					}
 					else
 					{
-						candidate_weight = obs_pos.column_pos - column_pos;
+						candidate_weight = obs_pos.row_pos - row_pos;
 						if (greater_weight < candidate_weight)
 						{
 							greater_weight = candidate_weight;
