@@ -16,9 +16,17 @@ struct			s_pos
 	int			column_pos;
 };
 
+struct s_param
+{
+	int num_lines;
+	char empty;
+	char obs;
+	char fill;
+};
+
 void			print_matrix(char **matrix, int row_count, int column_count);
 char			**write_x_in_matrix(char **matrix, int weigth,
-					struct s_pos pos);
+					struct s_pos pos, struct s_param params);
 
 struct s_pos	find_c_obs(int column_pos, int row_pos, struct s_pos *obs_dic)
 {
@@ -44,7 +52,7 @@ struct s_pos	find_c_obs(int column_pos, int row_pos, struct s_pos *obs_dic)
 }
 
 void	calc_weight(char **m, struct s_pos *obs_dic, int rc, int cc,
-		struct s_pos res_p)
+		struct s_pos res_p, struct s_param params)
 {
 	int				row_pos;
 	int				column_pos;
@@ -61,7 +69,7 @@ void	calc_weight(char **m, struct s_pos *obs_dic, int rc, int cc,
 		column_pos = -1;
 		while (++column_pos < cc)
 		{
-			if (m[row_pos][column_pos] != 'o')
+			if (m[row_pos][column_pos] != params.obs)
 			{
 				obs_pos = find_c_obs(column_pos, row_pos, obs_dic);
 				if (obs_pos.row_pos == -1)
@@ -103,11 +111,11 @@ void	calc_weight(char **m, struct s_pos *obs_dic, int rc, int cc,
 			}
 		}
 	}
-	print_matrix(write_x_in_matrix(m, greater_weight, res_p), rc, cc);
+	print_matrix(write_x_in_matrix(m, greater_weight, res_p, params), rc, cc);
 }
 
 struct s_pos	*put_obstacles(char **matrix, struct s_pos *obs_dic, int rcnt,
-		int ccnt)
+		int ccnt, struct s_param params)
 {
 	int	row_pos;
 	int	column_pos;
@@ -120,7 +128,7 @@ struct s_pos	*put_obstacles(char **matrix, struct s_pos *obs_dic, int rcnt,
 		row_pos = -1;
 		while (++row_pos < rcnt)
 		{
-			if (matrix[row_pos][column_pos] == 'o')
+			if (matrix[row_pos][column_pos] == params.obs)
 			{
 				obs_dic[it].column_pos = column_pos;
 				obs_dic[it].row_pos = row_pos;

@@ -26,11 +26,6 @@ struct s_param
 	char fill;
 };
 
-// int	check_matrix(char **matrix, struct s_param params, char *buffer)
-// {
-
-// }
-
 void	print_matrix(char **matrix, int row_count, int column_count)
 {
 	int	i;
@@ -50,7 +45,7 @@ void	print_matrix(char **matrix, int row_count, int column_count)
 	}
 }
 
-char	**write_x_in_matrix(char **matrix, int weigth, struct s_pos pos)
+char	**write_x_in_matrix(char **matrix, int weigth, struct s_pos pos, struct s_param params)
 {
 	int	row_pos;
 	int	column_pos;
@@ -61,7 +56,7 @@ char	**write_x_in_matrix(char **matrix, int weigth, struct s_pos pos)
 		row_pos = pos.row_pos;
 		while (row_pos < pos.row_pos + weigth)
 		{
-			matrix[row_pos][column_pos] = 'x';
+			matrix[row_pos][column_pos] = params.fill;
 			row_pos++;
 		}
 		column_pos++;
@@ -69,7 +64,7 @@ char	**write_x_in_matrix(char **matrix, int weigth, struct s_pos pos)
 	return (matrix);
 }
 
-char	**fill_matrix(char **matrix, char *buffer, int rcnt)
+char	**fill_matrix(char **matrix, char *buffer, int rcnt, struct s_param params)
 {
 	int	row_pos;
 	int	column_pos;
@@ -82,7 +77,7 @@ char	**fill_matrix(char **matrix, char *buffer, int rcnt)
 		;
 	while (*(buffer + pos_buffer) != '\0' && row_pos != rcnt)
 	{
-		if ((*(buffer + pos_buffer) == 'o') || (*(buffer + pos_buffer) == '.'))
+		if ((*(buffer + pos_buffer) == params.obs) || (*(buffer + pos_buffer) == params.empty))
 			matrix[row_pos][column_pos] = *(buffer + pos_buffer);
 		if (*(buffer + pos_buffer++) == '\n')
 		{

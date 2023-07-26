@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 # Archivos fuente
-SRCS = bsq.c  #rush02.c file.c dictionary.c utils.c
+SRCS = bsq.c bsq2.c bsq3.c 
 OBJS = $(SRCS:.c=.o)
 CFLAGS = -Wall -Wextra -Werror
 
