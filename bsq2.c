@@ -103,7 +103,6 @@ void	calc_weight(char **m, struct s_pos *obs_dic, int rc, int cc,
 			}
 		}
 	}
-	//printf("rc: %d, cc: %d\n", rc, cc);
 	print_matrix(write_x_in_matrix(m, greater_weight, res_p), rc, cc);
 }
 

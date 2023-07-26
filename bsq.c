@@ -23,6 +23,14 @@ struct			s_pos
 	int			column_pos;
 };
 
+struct s_param
+{
+	int num_lines;
+	char empty;
+	char obs;
+	char fill;
+};
+
 // AQUI NO SE SI PONER LAS CABECERAS QUE HAY EN EL OTRO ARCHIVO O UNA LIBRERIA
 
 char			**write_x_in_matrix(char **matrix, int weigth,
@@ -38,6 +46,18 @@ struct s_pos	*put_obstacles(char **matrix, struct s_pos *obs_dic, int rcnt,
 char			**fill_matrix(char **matrix, char *buffer, int rcnt);
 
 void			print_matrix(char **matrix, int row_count, int column_count);
+
+struct s_param attributes (char *buffer)
+{	
+	int pos_buffer;
+
+	pos_buffer = 0;
+	while (*(buffer + pos_buffer) != '\n')
+	{
+			
+		pos_buffer++;
+	}
+}
 
 int	read_file(char *file_name, int *row_count, int *column_count, char **buffer)
 {

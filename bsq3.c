@@ -10,20 +10,32 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
+
 struct	s_pos
 {
 	int	row_pos;
 	int	column_pos;
 };
 
-#include <unistd.h>
+struct s_param
+{
+	int num_lines;
+	char empty;
+	char obs;
+	char fill;
+};
+
+int	check_matrix(char **matrix, struct s_param params, char *buffer)
+{
+
+}
 
 void	print_matrix(char **matrix, int row_count, int column_count)
 {
 	int	i;
 	int	j;
 
-	//printf("Matriz copiada:\n");
 	i = 0;
 	while (i < row_count)
 	{
