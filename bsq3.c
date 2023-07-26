@@ -26,10 +26,10 @@ struct s_param
 	char fill;
 };
 
-int	check_matrix(char **matrix, struct s_param params, char *buffer)
-{
+// int	check_matrix(char **matrix, struct s_param params, char *buffer)
+// {
 
-}
+// }
 
 void	print_matrix(char **matrix, int row_count, int column_count)
 {

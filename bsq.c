@@ -47,16 +47,38 @@ char			**fill_matrix(char **matrix, char *buffer, int rcnt);
 
 void			print_matrix(char **matrix, int row_count, int column_count);
 
+int	ft_atoi(char *str, int pos)
+{
+	long	num;
+	int cont;
+
+	cont = 0;
+	num = 0;
+	while (cont < pos)
+	{
+		num *= 10;
+		num += str[cont] - '0';
+		cont++;
+	}
+	return ((int)num);
+}
+
 struct s_param attributes (char *buffer)
 {	
 	int pos_buffer;
+	int num;
+	struct s_param params;
 
+	num = 1;
 	pos_buffer = 0;
-	while (*(buffer + pos_buffer) != '\n')
-	{
-			
+	while(*(buffer + pos_buffer) != '\n')	
 		pos_buffer++;
-	}
+	params.num_lines = ft_atoi(buffer, pos_buffer - 3);
+	params.fill = *(buffer + pos_buffer - 1);
+	params.empty = *(buffer + pos_buffer - 3);
+	params.obs = *(buffer + pos_buffer - 2);
+	
+	return (params);
 }
 
 int	read_file(char *file_name, int *row_count, int *column_count, char **buffer)
@@ -64,6 +86,7 @@ int	read_file(char *file_name, int *row_count, int *column_count, char **buffer)
 	int	file;
 	int	i;
 	int	len;
+	struct s_param params;
 
 	file = open(file_name, O_RDONLY);
 	if (file == -1)
@@ -74,7 +97,8 @@ int	read_file(char *file_name, int *row_count, int *column_count, char **buffer)
 		close(file);
 		return (-1);
 	}
-	i = -1;
+	i = -1;	
+	params = attributes(*buffer);
 	while (++i < len)
 	{
 		if (*(*buffer + i) == '\n')
@@ -138,6 +162,8 @@ int	main(int argc, char *argv[])
 	char	*buffer;
 
 	cont = 1;
+	// argc = 2;
+	// argv[1] = "example2_file";
 	buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE);
 	if (buffer == NULL)
 		return (1);
