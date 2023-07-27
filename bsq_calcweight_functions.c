@@ -24,11 +24,11 @@ char	**write_x_in_matrix(char **matrix, int weigth, struct s_pos pos, struct s_p
 	int	row_pos;
 	int	column_pos;
 
-	column_pos = pos.column_pos;
-	while (column_pos < pos.column_pos + weigth)
+	column_pos = pos.cp;
+	while (column_pos < pos.cp + weigth)
 	{
-		row_pos = pos.row_pos;
-		while (row_pos < pos.row_pos + weigth)
+		row_pos = pos.rp;
+		while (row_pos < pos.rp + weigth)
 		{
 			matrix[row_pos][column_pos] = params.fill;
 			row_pos++;
@@ -46,16 +46,16 @@ struct s_pos	find_c_obs(int column_pos, int row_pos, struct s_pos *obs_dic)
 
 	it = -1;
 	found = 0;
-	obs_pos.column_pos = -1;
-	obs_pos.row_pos = -1;
-	while (!found && obs_dic[++it].row_pos != -1)
+	obs_pos.cp = -1;
+	obs_pos.rp = -1;
+	while (!found && obs_dic[++it].rp != -1)
 	{
-		if (obs_dic[it].column_pos >= column_pos
-			&& obs_dic[it].row_pos == row_pos)
+		if (obs_dic[it].cp >= column_pos
+			&& obs_dic[it].rp == row_pos)
 		{
 			found = 1;
-			obs_pos.column_pos = obs_dic[it].column_pos;
-			obs_pos.row_pos = obs_dic[it].row_pos;
+			obs_pos.cp = obs_dic[it].cp;
+			obs_pos.rp = obs_dic[it].rp;
 		}
 	}
 	return (obs_pos);

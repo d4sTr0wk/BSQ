@@ -2,7 +2,6 @@
 # define BSQ_H
 
 # include <fcntl.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include "bsq_algorithm_functions.h"
@@ -13,8 +12,8 @@
 
 struct			s_pos
 {
-	int			row_pos;
-	int			column_pos;
+	int			rp;
+	int			cp;
 };
 
 struct			s_param
@@ -26,7 +25,7 @@ struct			s_param
 };
 
 int	main(int argc, char *argv[]);
-int	algorithm(int rcnt, int ccnt, char *buffer, struct s_param params);
-int	read_file(char *file, int *rc, int *cc, char **buffer, struct s_param *p);
+int	algorithm(struct s_pos counter, char *buffer, struct s_param params);
+int	read_file(char *file, struct s_pos *counter, char **buffer, struct s_param *p);
 
 #endif

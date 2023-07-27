@@ -1,42 +1,51 @@
 #include "bsq.h"
 
-int	read_file(char *file_name, int *row_count, int *column_count, char **buffer,
-		struct s_param *params)
+char    **ft_stdin(char **argv, int *argc)
 {
-	int	file;
-	int	i;
-	int	len;
-	
-	file = open(file_name, O_RDONLY);
-	if (file == -1)
-		return (-1);
-	len = read(file, *buffer, BUFFER_SIZE);
-	if (len == -1)
-	{
-		close(file);
-		return (-1);
-	}
-	i = -1;
-	*params = attributes(*buffer);
-	if (params->num_lines == -1)
-		return (-2);
-	while (++i < len)
-	{
-		if (*(*buffer + i) == '\n')
-			++(*row_count);
-		else if (!(*row_count))
-			++(*column_count);
-	}
-	if (!valid_map(*buffer, params, *row_count))
-		return (-2);
-	if (close(file) == -1)
-		return (-1);
-	return (0);
+    *argc = 2;
+    argv[1] = 0;
+    return (argv);
 }
 
+int read_file(char *file_name, struct s_pos *counter,
+	char **buffer, struct s_param *params)
+{
+    int file;
+    int i;
+    int len;
+    if (file_name != 0)
+    {
+        file = open(file_name, O_RDONLY);
+        if (file == -1)
+            return (-1);
+    }
+    else
+        file = 0;
+    len = read(file, *buffer, BUFFER_SIZE);
+    if (len == -1)
+    {
+        close(file);
+        return (-1);
+    }
+    i = -1;
+    *params = attributes(*buffer);
+    if (params->num_lines == -1)
+        return (-2);
+    while (++i < len)
+    {
+        if (*(*buffer + i) == '\n')
+            (counter->rp)++;
+        else if (!counter->rp)
+            counter->cp++;
+    }
+    if (!valid_map(*buffer, params, counter->rp))
+        return (-2);
+    if (close(file) == -1 && *file_name != '0')
+        return (-1);
+    return (0);
+}
 
-
-int	algorithm(int rcnt, int ccnt, char *buffer, struct s_param params)
+int	algorithm(struct s_pos counter, char *buffer, struct s_param params)
 {
 	char			**matrix;
 	int				i;
@@ -44,31 +53,30 @@ int	algorithm(int rcnt, int ccnt, char *buffer, struct s_param params)
 	struct s_pos	res_p;
 
 	i = -1;
-	res_p.column_pos = -1;
-	res_p.row_pos = -1;
-	matrix = (char **)malloc(sizeof(char *) * rcnt);
+	res_p.cp = -1;
+	res_p.rp = -1;
+	matrix = (char **)malloc(sizeof(char *) * (counter.rp));
 	if (matrix == NULL)
 		return (1);
-	while (++i < rcnt)
+	while (++i < counter.rp)
 	{
-		matrix[i] = (char *)malloc(sizeof(char) * ccnt);
+		matrix[i] = (char *)malloc(sizeof(char) * (counter.cp));
 		if (matrix[i] == NULL)
 			return (1);
 	}
-	matrix = fill_matrix(matrix, buffer, rcnt, params);
-	obs_dic = (struct s_pos *)malloc(sizeof(struct s_pos) * rcnt * ccnt);
+	matrix = fill_matrix(matrix, buffer, counter.rp, params);
+	obs_dic = (struct s_pos *)malloc(sizeof(struct s_pos) * (counter.rp) * (counter.cp));
 	if (!obs_dic)
 		return (1);
-	obs_dic = put_obstacles(matrix, obs_dic, rcnt, ccnt, params);
-	calc_weight(matrix, obs_dic, rcnt, ccnt, res_p, params);
-	free_mat(matrix, obs_dic, rcnt);
+	obs_dic = put_obstacles(matrix, obs_dic, counter, params);
+	calc_weight(matrix, obs_dic, counter, res_p, params);
+	free_mat(matrix, obs_dic, counter.rp);
 	return (0);
 }
 
 int	main(int argc, char *argv[])
 {
-	int				row_count;
-	int				column_count;
+	struct s_pos	counter;
 	int				cont;
 	int				error;
 	char			*buffer;
@@ -80,11 +88,13 @@ int	main(int argc, char *argv[])
 		return (1);
 	if (!argc)
 		return (1);
+	if (argc == 1)
+        argv = ft_stdin(argv, &argc);
 	while (cont < argc)
 	{
-		row_count = -1;
-		column_count = 0;
-		error = read_file(argv[cont], &row_count, &column_count, &buffer,
+		counter.rp = -1;
+		counter.cp = 0;
+		error = read_file(argv[cont], &counter, &buffer,
 				&params);
 		if (error == (-1))
 			return (1);
@@ -93,7 +103,7 @@ int	main(int argc, char *argv[])
 			write(2, "map error\n", 11);
 			return (1);
 		}
-		if (algorithm(row_count, column_count, buffer, params))
+		if (algorithm(counter, buffer, params))
 			return (1);
 		write(1, "\n", 1);
 		cont++;
