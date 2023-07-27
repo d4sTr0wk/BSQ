@@ -6,12 +6,12 @@
 #    By: maxgarci <maxgarci@student.42malaga.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/23 23:09:42 by maxgarci          #+#    #+#              #
-#    Updated: 2023/07/25 11:49:31 by maxgarci         ###   ########.fr        #
+#    Updated: 2023/07/27 09:54:02 by maxgarci         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Archivos fuente
-SRCS = bsq.c bsq2.c bsq3.c 
+SRCS = bsq.c bsq_algorithm_functions.c bsq_calcweight_functions.c bsq_readfile_functions.c 
 OBJS = $(SRCS:.c=.o)
 CFLAGS = -Wall -Wextra -Werror
 
@@ -32,5 +32,3 @@ clean:
 
 fclean: clean
 	rm -f $(NAME)
-
-re: fclean all
