@@ -15,8 +15,8 @@
 
 # include "bsq.h"
 
-struct s_param;
-struct s_pos;
+struct	s_param;
+struct	s_pos;
 
 void			print_matrix(char **matrix, int row_count, int column_count);
 char			**write_x_in_matrix(char **matrix, int weigth, struct s_pos pos,

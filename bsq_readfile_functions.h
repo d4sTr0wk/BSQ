@@ -15,7 +15,7 @@
 
 # include "bsq.h"
 
-struct  s_param;
+struct	s_param;
 
 int				ft_atoi(char *str, int pos);
 struct s_param	attributes(char *buffer);
