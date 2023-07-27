@@ -1,6 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   bsq3.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ybouhaik <ybouhaik@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/25 20:31:39 by ybouhaik          #+#    #+#             */
+/*   Updated: 2023/07/25 20:42:54 by ybouhaik         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "bsq_algorithm_functions.h"
 
-char	**fill_matrix(char **matrix, char *buffer, int rcnt, struct s_param params)
+char	**fill_matrix(char **matrix, char *buffer, int rcnt,
+		struct s_param params)
 {
 	int	row_pos;
 	int	column_pos;
@@ -13,7 +26,8 @@ char	**fill_matrix(char **matrix, char *buffer, int rcnt, struct s_param params)
 		;
 	while (*(buffer + pos_buffer) != '\0' && row_pos != rcnt)
 	{
-		if ((*(buffer + pos_buffer) == params.obs) || (*(buffer + pos_buffer) == params.empty))
+		if ((*(buffer + pos_buffer) == params.obs) || (*(buffer
+					+ pos_buffer) == params.empty))
 			matrix[row_pos][column_pos] = *(buffer + pos_buffer);
 		if (*(buffer + pos_buffer++) == '\n')
 		{
@@ -27,7 +41,7 @@ char	**fill_matrix(char **matrix, char *buffer, int rcnt, struct s_param params)
 }
 
 struct s_pos	*put_obstacles(char **matrix, struct s_pos *obs_dic,
-				struct s_pos counter, struct s_param params)
+		struct s_pos counter, struct s_param params)
 {
 	int	row_pos;
 	int	column_pos;
@@ -53,9 +67,8 @@ struct s_pos	*put_obstacles(char **matrix, struct s_pos *obs_dic,
 	return (obs_dic);
 }
 
-void	calc_weight(char **m, struct s_pos *obs_dic,
-		struct s_pos c, struct s_pos res_p,
-		struct s_param params)
+void	calc_weight(char **m, struct s_pos *obs_dic, struct s_pos c,
+		struct s_pos res_p, struct s_param params)
 {
 	struct s_pos	pos;
 	int				greater_weight;
@@ -90,8 +103,7 @@ void	calc_weight(char **m, struct s_pos *obs_dic,
 						it++;
 					}
 					if (candidate_weight > greater_weight && (it
-							- pos.rp) == candidate_weight
-						&& (((obs_pos.cp
+							- pos.rp) == candidate_weight && (((obs_pos.cp
 									- pos.cp) >= candidate_weight)
 							|| (obs_pos.cp == -1)))
 					{
@@ -116,7 +128,8 @@ void	calc_weight(char **m, struct s_pos *obs_dic,
 			}
 		}
 	}
-	print_matrix(write_x_in_matrix(m, greater_weight, res_p, params), c.rp, c.cp);
+	print_matrix(write_x_in_matrix(m, greater_weight, res_p, params), c.rp,
+		c.cp);
 }
 
 void	free_mat(char **matrix, struct s_pos *obs_dic, int rcnt)

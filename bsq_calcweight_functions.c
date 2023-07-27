@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   bsq3.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ybouhaik <ybouhaik@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/25 20:31:39 by ybouhaik          #+#    #+#             */
+/*   Updated: 2023/07/25 20:42:54 by ybouhaik         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "bsq_calcweight_functions.h"
 
 void	print_matrix(char **matrix, int row_count, int column_count)
@@ -19,7 +31,8 @@ void	print_matrix(char **matrix, int row_count, int column_count)
 	}
 }
 
-char	**write_x_in_matrix(char **matrix, int weigth, struct s_pos pos, struct s_param params)
+char	**write_x_in_matrix(char **matrix, int weigth, struct s_pos pos,
+		struct s_param params)
 {
 	int	row_pos;
 	int	column_pos;
@@ -50,8 +63,7 @@ struct s_pos	find_c_obs(int column_pos, int row_pos, struct s_pos *obs_dic)
 	obs_pos.rp = -1;
 	while (!found && obs_dic[++it].rp != -1)
 	{
-		if (obs_dic[it].cp >= column_pos
-			&& obs_dic[it].rp == row_pos)
+		if (obs_dic[it].cp >= column_pos && obs_dic[it].rp == row_pos)
 		{
 			found = 1;
 			obs_pos.cp = obs_dic[it].cp;

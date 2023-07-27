@@ -1,4 +1,37 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   bsq3.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ybouhaik <ybouhaik@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/25 20:31:39 by ybouhaik          #+#    #+#             */
+/*   Updated: 2023/07/25 20:42:54 by ybouhaik         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "bsq_readfile_functions.h"
+
+int	ft_file(char *file_name, int *len, char **buffer)
+{
+	int	file;
+
+	if (file_name != 0)
+	{
+		file = open(file_name, O_RDONLY);
+		if (file == -1)
+			return (-1);
+	}
+	else
+		file = 0;
+	*len = read(file, *buffer, BUFFER_SIZE);
+	if (*len == -1)
+	{
+		close(file);
+		return (-1);
+	}
+	return (file);
+}
 
 int	ft_atoi(char *str, int pos)
 {
@@ -37,13 +70,15 @@ struct s_param	attributes(char *buffer)
 	return (params);
 }
 
-int long_lines(char *buffer, struct s_param *params, int *pos, int i)
+int	long_lines(char *buffer, struct s_param *params, int *pos, int i)
 {
-	int cont;
+	int	cont;
+
 	cont = 0;
 	while (*(buffer + *pos) != '\n' && ++cont)
 	{
-		if (*(buffer + *pos) != params->empty && *(buffer + *pos) != params->obs)
+		if (*(buffer + *pos) != params->empty && *(buffer
+				+ *pos) != params->obs)
 			return (0);
 		(*pos)++;
 	}
@@ -57,8 +92,8 @@ int	valid_map(char *buffer, struct s_param *params, int row_count)
 {
 	int	cont;
 	int	i;
-	int rows;
-	int pos;
+	int	rows;
+	int	pos;
 
 	pos = 0;
 	rows = 1;
@@ -71,7 +106,7 @@ int	valid_map(char *buffer, struct s_param *params, int row_count)
 		cont++;
 	i = cont;
 	while (rows < row_count)
-	{	
+	{
 		if (!long_lines(buffer, params, &pos, i))
 			return (0);
 		rows++;
