@@ -101,7 +101,10 @@ void	calc_weight(char **m, struct s_pos *obs_dic, int rc, int cc,
 					}
 					else
 					{
-						candidate_weight = obs_pos.row_pos - row_pos;
+						if (rc - row_pos < candidate_weight)
+							candidate_weight = rc - row_pos;
+						else
+							candidate_weight = obs_pos.row_pos - row_pos;
 						if (greater_weight < candidate_weight)
 						{
 							greater_weight = candidate_weight;
